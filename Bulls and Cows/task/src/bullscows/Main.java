@@ -5,39 +5,22 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        int numOfDigits = scanner.nextInt();
 
-        final String secCode = "9305";
-        int bulls = 0;
-        int cows = 0;
-        char[] secCodeArr = secCode.toCharArray();
+        StringBuilder secCode = new StringBuilder();
 
-        String number = scanner.nextLine(); // 1234
-        char[] numberArr = number.toCharArray();
-
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                if (secCodeArr[i] == numberArr[j]) {
-                    if (i == j) {
-                        bulls++;
-                    } else {
-                        cows++;
-                    }
-                }
+        if (numOfDigits <= 10) {
+            String pseudoRandomNumber;
+            do {
+                pseudoRandomNumber = Long.toString(System.nanoTime());
+            } while (pseudoRandomNumber.length() < numOfDigits && pseudoRandomNumber.charAt(0) != '0');
+            for (int i = 0; i < numOfDigits; i++) {
+                secCode.append(pseudoRandomNumber.charAt(i));
             }
-        }
-
-        // Output
-        System.out.print("Grade: ");
-        if (bulls != 0) {
-            System.out.printf("%d bull(s)", bulls);
-            if (cows != 0) {
-                System.out.printf(" and %d cow(s)", cows);
-            }
-        } else if (cows != 0) {
-            System.out.printf("%d cow(s)", cows);
+            System.out.printf("The random secret number is %s.", secCode);
         } else {
-            System.out.print("None");
+            System.out.printf("Error: can't generate a secret number with a length of %d" +
+                    " because there aren't enough unique digits.", numOfDigits);
         }
-        System.out.printf(". The secret code is %s.", secCode);
     }
 }
