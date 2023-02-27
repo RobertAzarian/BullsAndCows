@@ -1,40 +1,43 @@
 package bullscows;
 
+import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args) {
-        System.out.print(
-                """
-                The secret code is prepared: ****.
+        Scanner scanner = new Scanner(System.in);
 
-                Turn 1. Answer:
-                1234
-                Grade: 1 cow.
+        final String secCode = "9305";
+        int bulls = 0;
+        int cows = 0;
+        char[] secCodeArr = secCode.toCharArray();
 
-                Turn 2. Answer:
-                5678
-                Grade: 1 cow.
+        String number = scanner.nextLine(); // 1234
+        char[] numberArr = number.toCharArray();
 
-                Turn 3. Answer:
-                9012
-                Grade: 1 bull and 1 cow.
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                if (secCodeArr[i] == numberArr[j]) {
+                    if (i == j) {
+                        bulls++;
+                    } else {
+                        cows++;
+                    }
+                }
+            }
+        }
 
-                Turn 4. Answer:
-                9087
-                Grade: 1 bull and 1 cow.
-
-                Turn 5. Answer:
-                1087
-                Grade: 1 cow.
-
-                Turn 6. Answer:
-                9205
-                Grade: 3 bulls.
-
-                Turn 7. Answer:
-                9305
-                Grade: 4 bulls.
-                Congrats! The secret code is 9305.
-                """
-        );
+        // Output
+        System.out.print("Grade: ");
+        if (bulls != 0) {
+            System.out.printf("%d bull(s)", bulls);
+            if (cows != 0) {
+                System.out.printf(" and %d cow(s)", cows);
+            }
+        } else if (cows != 0) {
+            System.out.printf("%d cow(s)", cows);
+        } else {
+            System.out.print("None");
+        }
+        System.out.printf(". The secret code is %s.", secCode);
     }
 }
