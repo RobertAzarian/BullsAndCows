@@ -1,5 +1,6 @@
 package bullscows;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.Random;
 
@@ -15,24 +16,41 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         Random random = new Random();
 
-        System.out.println("Input the length of the secret code:");
-        int numOfDigits = scanner.nextInt();
-        System.out.println("Input the number of possible symbols in the code:");
-        int posSymb = scanner.nextInt();
+        int numOfDigits;
+        int posSymb;
 
-        if (numOfDigits < 0 || numOfDigits > 36) {
+        System.out.println("Input the length of the secret code:");
+        try {
+            numOfDigits = scanner.nextInt();
+        } catch(InputMismatchException e) {
+            System.out.println("error");
+            return "Error";
+        }
+        System.out.println("Input the number of possible symbols in the code:");
+        try {
+            posSymb = scanner.nextInt();
+        } catch(InputMismatchException e) {
+            System.out.println("error");
+            return "Error";
+        }
+
+        if (numOfDigits <= 0 || numOfDigits > 36) {
             System.out.printf("Error: can't generate a secret number with a length of %d" +
                     " because there aren't enough unique digits.", numOfDigits);
             return "Error";
         } else if (posSymb < numOfDigits) {
-            System.out.println("Error");
+            System.out.printf("Error: it's not possible to generate a code with" +
+                    " a length of %d with %d unique symbols.", numOfDigits, posSymb);
+            return "Error";
+        } else if (posSymb > 36) {
+            System.out.println("Error: maximum number of possible symbols in the code is 36 (0-9, a-z).");
             return "Error";
         }
 
         StringBuilder secCode = new StringBuilder(numOfDigits);
         StringBuilder numStr = new StringBuilder("0123456789abcdefghijklmnopqrstuvwxyz");
         String info = "*".repeat(numOfDigits) + " (0-" +
-                (posSymb <= 9 ? numStr.charAt(posSymb - 1) + ")." : "9, a-" + numStr.charAt(posSymb - 1) + ").");
+                (posSymb <= 10 ? numStr.charAt(posSymb - 1) + ")." : "9, a-" + numStr.charAt(posSymb - 1) + ").");
 
         while (numOfDigits != 0) {
             int point = random.nextInt(0, posSymb);
