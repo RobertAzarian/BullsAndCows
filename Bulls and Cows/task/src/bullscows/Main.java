@@ -1,77 +1,48 @@
 package bullscows;
 
 import java.util.Scanner;
+import java.util.Random;
 
 public class Main {
     public static void main(String[] args) {
         String secCode = getSecretCode();
-        startGame(secCode);
+        if (!"Error".equals(secCode)) {
+            startGame(secCode);
+        }
     }
 
-    // Рандом из макс 10 уникальных чисел!
     public static String getSecretCode() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Please, enter the secret code's length:");
-        final int numOfDigits = scanner.nextInt(); // 4
+        Random random = new Random();
 
-        if (numOfDigits <= 10) {
-            StringBuilder secCode = new StringBuilder(numOfDigits);
-            if (numOfDigits > 0) {
-                StringBuilder numForSecCode = new StringBuilder
-                        (Integer.toString((int) (Math.random() * Math.pow(10, numOfDigits))));
-                secCode.append(numForSecCode.charAt(0));
-                while (secCode.length() != numOfDigits) {
-                    for (int i = 1; i < numForSecCode.length() && secCode.length() != numOfDigits; i++) {
-                        for (int j = 0; j < secCode.length(); j++) {
-                            if (secCode.charAt(j) == numForSecCode.charAt(i)) {
-                                break;
-                            }
-                            if (j + 1 == secCode.length()) {
-                                secCode.append(numForSecCode.charAt(i));
-                            }
-                        }
-                    }
-                    numForSecCode = new StringBuilder
-                            (Integer.toString((int) (Math.random() * Math.pow(10, numOfDigits))));
-                }
-            }
-            // System.out.println(secCode);
-            return secCode.toString();
-        } else {
+        System.out.println("Input the length of the secret code:");
+        int numOfDigits = scanner.nextInt();
+        System.out.println("Input the number of possible symbols in the code:");
+        int posSymb = scanner.nextInt();
+
+        if (numOfDigits < 0 || numOfDigits > 36) {
             System.out.printf("Error: can't generate a secret number with a length of %d" +
                     " because there aren't enough unique digits.", numOfDigits);
+            return "Error";
+        } else if (posSymb < numOfDigits) {
+            System.out.println("Error");
             return "Error";
         }
 
-/*
-        if (numOfDigits <= 10) {
-            StringBuilder secCode = new StringBuilder(numOfDigits);
-            if (numOfDigits > 0) {
-                StringBuilder numForSecCode = new StringBuilder(Long.toString(System.nanoTime()));
-                numForSecCode.reverse();
-                secCode.append(numForSecCode.charAt(0));
-                while (secCode.length() != numOfDigits) {
-                    for (int i = 1; i < numForSecCode.length() && secCode.length() != numOfDigits; i++) {
-                        for (int j = 0; j < secCode.length(); j++) {
-                            if (secCode.charAt(j) == numForSecCode.charAt(i)) {
-                                break;
-                            }
-                            if (j + 1 == secCode.length()) {
-                                secCode.append(numForSecCode.charAt(i));
-                            }
-                        }
-                    }
-                    numForSecCode = new StringBuilder(Long.toString(System.nanoTime()));
-                    numForSecCode.reverse();
-                }
-            }
-            System.out.println(secCode);
-            return secCode.toString();
-        } else {
-            System.out.printf("Error: can't generate a secret number with a length of %d" +
-                    " because there aren't enough unique digits.", numOfDigits);
-            return "Error";
-        }*/
+        StringBuilder secCode = new StringBuilder(numOfDigits);
+        StringBuilder numStr = new StringBuilder("0123456789abcdefghijklmnopqrstuvwxyz");
+        String info = "*".repeat(numOfDigits) + " (0-" +
+                (posSymb <= 9 ? numStr.charAt(posSymb - 1) + ")." : "9, a-" + numStr.charAt(posSymb - 1) + ").");
+
+        while (numOfDigits != 0) {
+            int point = random.nextInt(0, posSymb);
+            secCode.append(numStr.charAt(point));
+            numStr.deleteCharAt(point);
+            numOfDigits--;
+            posSymb--;
+        }
+        System.out.println("The secret is prepared: " + info);
+        return secCode.toString();
     }
 
     public static void startGame(String secCode) {
@@ -128,117 +99,3 @@ public class Main {
         }
     }
 }
-
-
-/*
-
-    public static String getSecretCode() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Please, enter the secret code's length:");
-        final int numOfDigits = scanner.nextInt();
-        StringBuilder secCode = new StringBuilder(Long.toString(System.nanoTime()));
-        secCode.reverse().delete(8, secCode.length());
-        int count = 1;
-        while (numOfDigits > secCode.length()) {
-            count++;
-            secCode.append(new StringBuilder(Long.toString(System.nanoTime())).reverse());
-            secCode.delete(8 * count, secCode.length());
-        }
-        secCode.delete(numOfDigits, secCode.length());
-
-        return secCode.toString();
-    }
-
-*/
-
-    /*
-    Рандом из макс 10 уникальных чисел!
-    public static String getSecretCode() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Please, enter the secret code's length:");
-        final int numOfDigits = scanner.nextInt(); // 4
-
-        if (numOfDigits <= 10) {
-            StringBuilder secCode = new StringBuilder(numOfDigits);
-            if (numOfDigits > 0) {
-                StringBuilder numForSecCode = new StringBuilder(Long.toString(System.nanoTime()));
-                numForSecCode.reverse();
-                secCode.append(numForSecCode.charAt(0));
-                while (secCode.length() != numOfDigits) {
-                    for (int i = 1; i < numForSecCode.length() && secCode.length() != numOfDigits; i++) {
-                        for (int j = 0; j < secCode.length(); j++) {
-                            if (secCode.charAt(j) == numForSecCode.charAt(i)) {
-                                break;
-                            }
-                            if (j + 1 == secCode.length()) {
-                                secCode.append(numForSecCode.charAt(i));
-                            }
-                        }
-                    }
-                    numForSecCode = new StringBuilder(Long.toString(System.nanoTime()));
-                    numForSecCode.reverse();
-                }
-            }
-            System.out.println(secCode);
-            return secCode.toString();
-        } else {
-            System.out.printf("Error: can't generate a secret number with a length of %d" +
-                    " because there aren't enough unique digits.", numOfDigits);
-            return "Error";
-        }
-    }
-    */
-
-
-
-        /*if (numOfDigits > 0) {
-            StringBuilder numForSecCode = new StringBuilder(Long.toString(System.nanoTime()));
-            numForSecCode.reverse();
-            secCode.append(numForSecCode.charAt(0));
-            while (secCode.length() < numOfDigits) {
-                for (int i = 1; i < numForSecCode.length() || secCode.length() != numOfDigits; i++) {
-                    for (int j = 0; j < secCode.length(); j++) {
-                        if (numForSecCode.charAt(i) == secCode.charAt(j)) {
-                            break;
-                        } else if (j == secCode.length() - 1) {
-                            secCode.append(numForSecCode.charAt(i));
-                        }
-                    }
-                }
-                    numForSecCode =  new StringBuilder(Long.toString(System.nanoTime()));
-            }
-            System.out.println(secCode);
-            return secCode.toString();
-        } else {
-            return "";
-        }*/
-
-
-        /*boolean isNumbersRepeat = false;
-        boolean isNumberShorter;
-        boolean isZeroFirst;
-        if (numOfDigits <= 10) {
-            String pseudoRandomNumber;
-            do {
-                pseudoRandomNumber = Long.toString(System.nanoTime());
-                isNumberShorter = pseudoRandomNumber.length() < numOfDigits;
-                isZeroFirst = pseudoRandomNumber.charAt(0) == '0';
-                for (int i = 0; !isNumbersRepeat && (i < (numOfDigits - 1)); i++) {
-                    for (int j = i + 1; j < numOfDigits; j++) {
-                        if (pseudoRandomNumber.charAt(i) == pseudoRandomNumber.charAt(j)) {
-                            isNumbersRepeat = true;
-                            break;
-                        }
-                    }
-                }
-            } while (isNumberShorter || isZeroFirst || !isNumbersRepeat);
-            for (int i = 0; i < numOfDigits; i++) {
-                secCode.append(pseudoRandomNumber.charAt(i));
-            }
-            return secCode.toString();
-        } else {
-            System.out.printf("Error: can't generate a secret number with a length of %d" +
-                    " because there aren't enough unique digits.", numOfDigits);
-            return "Error";
-        }*/
-//  }
