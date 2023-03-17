@@ -17,6 +17,36 @@ public class Main {
         if (numOfDigits <= 10) {
             StringBuilder secCode = new StringBuilder(numOfDigits);
             if (numOfDigits > 0) {
+                StringBuilder numForSecCode = new StringBuilder
+                        (Integer.toString((int) (Math.random() * Math.pow(10, numOfDigits))));
+                secCode.append(numForSecCode.charAt(0));
+                while (secCode.length() != numOfDigits) {
+                    for (int i = 1; i < numForSecCode.length() && secCode.length() != numOfDigits; i++) {
+                        for (int j = 0; j < secCode.length(); j++) {
+                            if (secCode.charAt(j) == numForSecCode.charAt(i)) {
+                                break;
+                            }
+                            if (j + 1 == secCode.length()) {
+                                secCode.append(numForSecCode.charAt(i));
+                            }
+                        }
+                    }
+                    numForSecCode = new StringBuilder
+                            (Integer.toString((int) (Math.random() * Math.pow(10, numOfDigits))));
+                }
+            }
+            // System.out.println(secCode);
+            return secCode.toString();
+        } else {
+            System.out.printf("Error: can't generate a secret number with a length of %d" +
+                    " because there aren't enough unique digits.", numOfDigits);
+            return "Error";
+        }
+
+/*
+        if (numOfDigits <= 10) {
+            StringBuilder secCode = new StringBuilder(numOfDigits);
+            if (numOfDigits > 0) {
                 StringBuilder numForSecCode = new StringBuilder(Long.toString(System.nanoTime()));
                 numForSecCode.reverse();
                 secCode.append(numForSecCode.charAt(0));
@@ -41,7 +71,7 @@ public class Main {
             System.out.printf("Error: can't generate a secret number with a length of %d" +
                     " because there aren't enough unique digits.", numOfDigits);
             return "Error";
-        }
+        }*/
     }
 
     public static void startGame(String secCode) {
